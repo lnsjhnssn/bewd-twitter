@@ -1,5 +1,7 @@
 class TweetsController < ApplicationController
   before_action :require_login, only: [:create, :destroy]
+  
+  # POST /tweets
   def create
     token = cookies.signed[:twitter_session_token]
     session = Session.find_by(token: token)
@@ -18,6 +20,7 @@ class TweetsController < ApplicationController
     end
   end
 
+  # DELETE /tweets/:id
   def destroy
     @tweet = Tweet.find_by(id: params[:id])
 
@@ -28,11 +31,13 @@ class TweetsController < ApplicationController
     end
   end
   
+  # GET /tweets
   def index
     @tweets = Tweet.order(created_at: :desc)
     render 'tweets/index'
   end
  
+  # GET /users/:username/tweets
   def index_by_user
     user = User.find_by(username: params[:username])
     if user
@@ -55,14 +60,6 @@ class TweetsController < ApplicationController
       render json: { success: false }
     end
   end
-
-  # def current_user
-  #   token = cookies.signed[:twitter_session_token]
-  #   session = Session.find_by(token: token)
-  #   session&.user
-  # end
-
-
 end
 
 

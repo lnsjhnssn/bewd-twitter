@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  
+  # POST /sessions
   def create
     @user = User.find_by(username: params[:user][:username])
 
@@ -8,7 +10,6 @@ class SessionsController < ApplicationController
         value: session.token,
         httponly: true
       }
-
       render json: {
         success: true
       }
@@ -19,6 +20,7 @@ class SessionsController < ApplicationController
     end
   end
 
+  # GET /authenticated
   def authenticated
     token = cookies.permanent.signed[:twitter_session_token]
     session = Session.find_by(token: token)
@@ -35,6 +37,7 @@ class SessionsController < ApplicationController
     end
   end
 
+  # DELETE /sessions
   def destroy
     token = cookies.permanent.signed[:twitter_session_token]
     session = Session.find_by(token: token)
